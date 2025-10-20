@@ -1,33 +1,114 @@
 Organizations:
 
-- &org0
-
-   Name: org0
-
-   ID: org0MSP
-
-   MSPDir: /tmp/hyperledger/org0/msp
+- &ordOrg
+   Name: ordOrg
+   ID: ordOrgMSP
+   MSPDir: /home/vagrant/fabirc/dev-try-hyperledger/organizations/ordererOrg/msp
+   Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.admin')"
 
 - &org1
-
    Name: org1
-
-   ID: org1MSP
-
-   MSPDir: /tmp/hyperledger/org1/msp
-
+   ID: Org1MSP
+   MSPDir: /home/vagrant/fabirc/dev-try-hyperledger/organizations/org1/msp
+   Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org1MSP.peer')"
    AnchorPeers:
-      - Host: peer1-org1
-         Port: 7051
+      - Host: org1-peer1
+        Port: 7050
+      - Host: org1-peer2
+        Port: 7052
 
-- &org2
+Application: &ApplicationDefaults
+   Organizations:
+   Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "ANY Admins"
+      LifecycleEndorsement:
+        Type: ImplicitMeta
+        Rule: "ANY Endorsement"
+      Endorsement:
+        Type: ImplicitMeta
+        Rule: "ANY Endorsement"
 
-   Name: org2
+Orderer: &OrdererDefaults
+   OrdererType: solo
+   Addresses:
+      - ordOrg-ord1:7051
+      - ordOrg-ord2:7053
+   BatchTimeout: 2s
+   BatchSize:
+      MaxMessageCount: 10
+      AbsoluteMaxBytes: 99 MB
+      PreferredMaxBytes: 512 KB
+   Policies:
+      Readers:
+         Type: ImplicitMeta
+         Rule: "ANY Readers"
+      Writers:
+         Type: ImplicitMeta
+         Rule: "ANY Writers"
+      Admins:
+         Type: ImplicitMeta
+         Rule: "ANY Admins"
+      BlockValidation:
+         Type: ImplicitMeta
+         Rule: "ANY Writers"
 
-   ID: org2MSP
+Channel: &OrgsChannel
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "ANY Admins"
 
-   MSPDir: /tmp/hyperledger/org2/msp
+Profiles:
+   OrgsOrdererGenesis:
+      <<: *OrgsChannel
+      Orderer:
+         <<: *OrdererDefaults
+         Organizations:
+           - *ordOrg
+      Consortiums:
+         SampleConsortium:
+            Organizations:
+               - *org1
 
-   AnchorPeers:
-      - Host: peer1-org2
-        Port: 7051
+   OrgsChannel:
+      <<: *OrgsChannel
+      Consortium: SampleConsortium
+      Application:
+         <<: *ApplicationDefaults
+         Organizations:
+            - *org1

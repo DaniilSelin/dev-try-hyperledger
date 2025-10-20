@@ -7,14 +7,14 @@ networks:
 services:
   ordOrg-ord1:
     container_name: ordOrg-ord1
-    image: hyperledger/fabric-orderer:latest
+    image: hyperledger/fabric-orderer:2.5
     environment:
       - ORDERER_HOME=/tmp/hyperledger/orderer
       - ORDERER_HOST=ordOrg-ord1
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/tmp/hyperledger/orgOrd/orderer/genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=ordOrg
+      - ORDERER_GENERAL_GENESISFILE=/tmp/hyperledger/orgOrd/orderer/block/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ordOrgMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/tmp/hyperledger/orgOrd/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_CERTIFICATE=/tmp/hyperledger/orgOrd/orderer/tls-msp/signcerts/cert.pem
@@ -24,19 +24,22 @@ services:
       - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
     volumes:
       - ../organizations/ordererOrg/orderers/orderer1:/tmp/hyperledger/orgOrd/orderer/
-      - ../organizations/ordererOrg/orderer/config:/etc/hyperledger/config
+      - ../organizations/ordererOrg/orderers/config:/etc/hyperledger/config
+      - ../organizations/ordererOrg/orderers/block:/tmp/hyperledger/orgOrd/orderer/block
+    ports:
+      - 7051:7051
     networks:
       - dev
 
   ordOrg-ord2:
     container_name: ordOrg-ord2
-    image: hyperledger/fabric-orderer:latest
+    image: hyperledger/fabric-orderer:2.5
     environment:
       - ORDERER_HOME=/tmp/hyperledger/orderer
       - ORDERER_HOST=ordOrg-ord2
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/tmp/hyperledger/orgOrd/orderer/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/tmp/hyperledger/orgOrd/orderer/block/genesis.block
       - ORDERER_GENERAL_LOCALMSPID=ordOrg
       - ORDERER_GENERAL_LOCALMSPDIR=/tmp/hyperledger/orgOrd/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
@@ -47,6 +50,9 @@ services:
       - ORDERER_DEBUG_BROADCASTTRACEDIR=data/logs
     volumes:
       - ../organizations/ordererOrg/orderers/orderer2:/tmp/hyperledger/orgOrd/orderer/
-      - ../organizations/ordererOrg/orderer/config:/etc/hyperledger/config
+      - ../organizations/ordererOrg/orderers/config:/etc/hyperledger/config
+      - ../organizations/ordererOrg/orderers/block:/tmp/hyperledger/orgOrd/orderer/block
+    ports:
+      - 7053:7053
     networks:
       - dev

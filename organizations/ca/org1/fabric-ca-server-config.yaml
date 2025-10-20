@@ -85,13 +85,13 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name:
+  name: org1
   # Key file (is only used to import a private key into BCCSP)
-  keyfile:
+  keyfile: ca-key.pem
   # Certificate file (default: ca-cert.pem)
-  certfile:
+  certfile: ca-cert.pem
   # Chain file
-  chainfile:
+  chainfile: ca-chain.pem
   # Ignore Certificate Expiration in the case of re-enroll
   reenrollIgnoreCertExpiry: false
 
@@ -308,7 +308,7 @@ signing:
 #  if the server creates a self-signed TLS certificate.
 ###########################################################################
 csr:
-   cn: fabric-ca-server
+   cn: org1
    keyrequest:
      algo: ecdsa
      size: 256
@@ -316,7 +316,7 @@ csr:
       - C: US
         ST: "North Carolina"
         L:
-        O: Hyperledger
+        O: org1
         OU: Fabric
    hosts:
      - 4d4ebb7bfcdf
