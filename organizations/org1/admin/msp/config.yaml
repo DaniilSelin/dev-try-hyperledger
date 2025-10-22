@@ -1,7 +1,7 @@
 NodeOUs:
   Enable: true
   ClientOUIdentifier:
-    Certificate: cacerts/ca-cert.pem
+    Certificate: cacerts/ca-cert.pem 
     OrganizationalUnitIdentifier: client
   PeerOUIdentifier:
     Certificate: cacerts/ca-cert.pem

@@ -6,8 +6,8 @@ networks:
     name: fabric_dev
 
 services:
-  cli-org1:
-    container_name: cli-org1
+  cli-org1-peer1:
+    container_name: cli-org1-peer1
     image: hyperledger/fabric-tools
     tty: true
     stdin_open: true
@@ -16,22 +16,22 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_ID=cli-org1
-      - CORE_PEER_ADDRESS=org1-peer1:7051
+      - CORE_PEER_ADDRESS=org1-peer1:7050
       - CORE_PEER_LOCALMSPID=org1MSP
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_ROOTCERT_FILE=/tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-localhost-10054.pem
-      - CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/peer1/msp
+      - CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/admin/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/org1
     command: sh
     volumes:
-      - /home/vagrant/fabirc/dev-try-hyperledger/organizations/org1/peers/peer1:/tmp/hyperledger/org1/peer1
-      - /home/vagrant/fabirc/fabric-samples/asset-transfer-basic/chaincode-go/chaincode:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
-      - /home/vagrant/fabirc/dev-try-hyperledger/organizations/org1/admin:/tmp/hyperledger/org1/admin
+      - /home/vboxuser/fabric/dev-net/organizations/org1/peers/peer1:/tmp/hyperledger/org1/peer1
+      - /home/vboxuser/fabric/fabric-samples/asset-transfer-basic/chaincode-go:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+      - /home/vboxuser/fabric/dev-net/organizations/org1/admin:/tmp/hyperledger/org1/admin
     networks:
       - dev
   
-  cli-org2:
-    container_name: cli-org2
+  cli-org-peer2:
+    container_name: cli-org1-peer2
     image: hyperledger/fabric-tools
     tty: true
     stdin_open: true
@@ -39,17 +39,17 @@ services:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=DEBUG
-      - CORE_PEER_ID=cli-org2
+      - CORE_PEER_ID=cli-org1
       - CORE_PEER_ADDRESS=org1-peer2:7052
       - CORE_PEER_LOCALMSPID=org1MSP
       - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_ROOTCERT_FILE=/tmp/hyperledger/org2/peer2/tls-msp/tlscacerts/tls-localhost-10054.pem
-      - CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org2/peer2/msp
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/org2
+      - CORE_PEER_TLS_ROOTCERT_FILE=/tmp/hyperledger/org1/peer2/tls-msp/tlscacerts/tls-localhost-10054.pem
+      - CORE_PEER_MSPCONFIGPATH=/tmp/hyperledger/org1/admin/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/org1
     command: sh
     volumes:
-      - /home/vagrant/fabirc/dev-try-hyperledger/organizations/org1/peers/peer2:/tmp/hyperledger/org2/peer2
-      - /home/vagrant/fabirc/fabric-samples/asset-transfer-basic/chaincode-go/chaincode:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
-      - /home/vagrant/fabirc/dev-try-hyperledger/organizations/org1/admin:/tmp/hyperledger/org2/admin
+      - /home/vboxuser/fabric/dev-net/organizations/org1/peers/peer2:/tmp/hyperledger/org1/peer2
+      - /home/vboxuser/fabric/fabric-samples/asset-transfer-basic/chaincode-go:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+      - /home/vboxuser/fabric/dev-net/organizations/org1/admin:/tmp/hyperledger/org1/admin
     networks:
       - dev

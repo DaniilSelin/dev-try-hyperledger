@@ -1,0 +1,3 @@
+[34m2025-10-22 10:02:09.908 +07 0001 INFO[0m [common.tools.configtxgen] [34;1mmain[0m -> Loading configuration
+[34m2025-10-22 10:02:09.910 +07 0002 INFO[0m [common.tools.configtxgen.localconfig] [34;1mcompleteInitialization[0m -> orderer type: solo
+[34m2025-10-22 10:02:09.910 +07 0003 INFO[0m [common.tools.configtxgen.localconfig] [34;1mLoadTopLevel[0m -> Loaded configuration: /home/vboxuser/fabric/dev-net/organizations/ordererOrg/orderers/config/configtx.yaml
