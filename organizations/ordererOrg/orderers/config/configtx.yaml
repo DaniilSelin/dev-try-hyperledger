@@ -1,0 +1,114 @@
+Organizations:
+
+- &ordOrg
+   Name: ordOrg
+   ID: ordOrgMSP
+   MSPDir: /home/vboxuser/fabric/dev-net/organizations/ordererOrg/msp
+   Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ordOrgMSP.admin')"
+
+- &org1
+   Name: org1
+   ID: org1MSP
+   MSPDir: /home/vboxuser/fabric/dev-net/organizations/org1/msp
+   Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org1MSP.admin', 'org1MSP.peer', 'org1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org1MSP.admin', 'org1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org1MSP.peer')"
+   AnchorPeers:
+      - Host: org1-peer1
+        Port: 7050
+      - Host: org1-peer2
+        Port: 7052
+
+Application: &ApplicationDefaults
+   Organizations:
+   Policies:
+      Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+      Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+      Admins:
+        Type: ImplicitMeta
+        Rule: "ANY Admins"
+      LifecycleEndorsement:
+        Type: ImplicitMeta
+        Rule: "ANY Endorsement"
+      Endorsement:
+        Type: ImplicitMeta
+        Rule: "ANY Endorsement"
+
+Orderer: &OrdererDefaults
+   OrdererType: solo
+   Addresses:
+      - ordOrg-ord1:7051
+      - ordOrg-ord2:7053
+   BatchTimeout: 2s
+   BatchSize:
+      MaxMessageCount: 10
+      AbsoluteMaxBytes: 99 MB
+      PreferredMaxBytes: 512 KB
+   Policies:
+      Readers:
+         Type: ImplicitMeta
+         Rule: "ANY Readers"
+      Writers:
+         Type: ImplicitMeta
+         Rule: "ANY Writers"
+      Admins:
+         Type: ImplicitMeta
+         Rule: "ANY Admins"
+      BlockValidation:
+         Type: ImplicitMeta
+         Rule: "ANY Writers"
+
+Channel: &OrgsChannel
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "ANY Admins"
+
+Profiles:
+   OrgsOrdererGenesis:
+      <<: *OrgsChannel
+      Orderer:
+         <<: *OrdererDefaults
+         Organizations:
+           - *ordOrg
+      Consortiums:
+         SampleConsortium:
+            Organizations:
+               - *org1
+
+   OrgsChannel:
+      <<: *OrgsChannel
+      Consortium: SampleConsortium
+      Application:
+         <<: *ApplicationDefaults
+         Organizations:
+            - *org1

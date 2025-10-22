@@ -1,0 +1,1 @@
+peer channel create -c mychannel -f /tmp/hyperledger/org1/peer1/assets/channel.tx -o ordOrg-ord1:7050 --outputBlock /tmp/hyperledger/org1/peer1/assets/mychannel.block --tls --cafile /tmp/hyperledger/org1/peer1/tls-msp/tlscacerts/tls-localhost-10054.pem
